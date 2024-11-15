@@ -96,7 +96,7 @@
                 </div>
 
                 <div class="form-group mb-3 d-flex align-items-center">
-                    <label class="form-label" data-bs-toggle="tooltip" title="Number of sprint days excluding weekends">Total Days:</label>
+                    <label for="sprintDays" class="form-label" data-bs-toggle="tooltip" title="Number of sprint days excluding weekends">Total Days:</label>
                     <span class="form-control w-50" id="sprintDays">0</span>
                 </div>
 
@@ -141,6 +141,7 @@
                         <th>Team Member</th>
                         <th>Available Days</th>
                         <th>PTO Dates</th>
+                        <th>Story Point capacity</th>
                         <th>
                             <button class="btn btn-primary btn-sm" onclick="addTeamMember()">
                                 <i class="bi bi-plus-circle"></i> Add
@@ -212,17 +213,18 @@
             const cell1 = newRow.insertCell(0);
             const cell2 = newRow.insertCell(1);
             const cell3 = newRow.insertCell(2);
-            
-            // Add input fields in the new row
-            cell1.innerHTML = '<input type="text" class="form-control" placeholder="Teammate Name">';
-            cell2.innerHTML = `<input type="number" class="form-control available-days" value="${document.getElementById('sprintDays').innerText}" oninput="calculateTotalTeamDays(); updateTableRowColor(this.parentElement.parentElement);">`;
-            cell3.innerHTML = '<input type="text" class="form-control" placeholder="">';
-
             const cell4 = newRow.insertCell(3);
-            cell4.innerHTML = '<button class="btn btn-danger btn-sm" onclick="deleteTeamMember(this)"><i class="bi bi-dash-circle"></i> Delete</button>';
+
+            // Add input fields in the new row
+            cell1.innerHTML = '<input type="text" id="teammate-name" class="form-control" placeholder="Teammate Name">';
+            cell2.innerHTML = `<input type="number" id="teammate-availability" class="form-control available-days" value="${document.getElementById('sprintDays').innerText}" oninput="calculateTotalTeamDays(); updateTableRowColor(this.parentElement.parentElement);">`;
+            cell3.innerHTML = '<input type="text" id="teammate-pto" class="form-control" placeholder="">';
+            cell4.innerHTML = '<input type="number" id="teammate-capacity" class="form-control" value="0" disabled="disabled">';
+
+            const cell5 = newRow.insertCell(4);
+            cell5.innerHTML = '<button class="btn btn-danger btn-sm" onclick="deleteTeamMember(this)"><i class="bi bi-dash-circle"></i> Delete</button>';
 
             updateTeamSize();
-            calculateTotalTeamDays();
             updateTableRowColor(newRow); // Apply conditional coloring
         }
 
@@ -308,8 +310,9 @@
                 const targetStoryPoints = Math.round((adjustedCapacity / 100) * teamVelocity);
                 document.getElementById('targetStoryPoints').innerText = targetStoryPoints;
             } else {
-                document.getElementById('targetStoryPoints').innerText = 0;
+                document.getElementById('targetStoryPoints').innerText = '0';
             }
+            updateTeamMembersStoryPointCapacity();
         }
 
         function updateTableRowColor(row) {
@@ -318,6 +321,29 @@
                 row.classList.add('table-danger'); // Highlight row with low availability
             } else {
                 row.classList.remove('table-danger');
+            }
+        }
+
+        function updateTeamMembersStoryPointCapacity() {
+            // A Team member's Story Point capacity is the total Story Points
+            // expressed as a proportion of the Team member's availability compared
+            // to the whole team's availability.
+            const totalTeamDays = parseFloat(document.getElementById('totalTeamDays').innerText);
+            const targetStoryPoints = parseFloat(document.getElementById('targetStoryPoints').innerText);
+            let totalTeamMembersCapacity = 0;
+            const rows = document.querySelectorAll("#teamTable tr");
+            rows.forEach(row => {
+                const teamMemberDays = parseFloat(row.cells[1].querySelector("input").value);
+                const teamMemberCapacity = Math.round(teamMemberDays / totalTeamDays * targetStoryPoints);
+                row.cells[3].innerText = teamMemberCapacity.toString();
+                totalTeamMembersCapacity += teamMemberCapacity;
+            });
+
+            // Fudge a random Team member's capacity so the totals match
+            if(totalTeamMembersCapacity !== targetStoryPoints) {
+                const randomRowIndex = Math.floor(Math.random()*rows.length);
+                const teamMemberCapacity = parseInt(rows[randomRowIndex].cells[3].innerText);
+                rows[randomRowIndex].cells[3].innerText = (teamMemberCapacity + (targetStoryPoints - totalTeamMembersCapacity)).toString();
             }
         }
 
@@ -389,6 +415,7 @@
                     updateTeamSize();
                     calculateSprintDays()
                     calculateTotalTeamDays();
+                    updateTeamMembersStoryPointCapacity();
 
                     alert("Template loaded successfully!");
 
