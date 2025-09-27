@@ -29,7 +29,7 @@ class SprintCalculator {
     let workingDays = 0;
     const currentDate = new Date(startDate);
 
-    while (currentDate < endDate) {
+    while (currentDate <= endDate) {
       const dayOfWeek = currentDate.getDay();
       if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude Saturdays and Sundays
         workingDays++;
@@ -239,8 +239,9 @@ class CapacitatorRenderer {
   }
 
   calculateSprintDays() {
-    const startDate = new Date(this.state.sprint.sprintStarts);
-    const endDate = new Date(this.state.sprint.sprintEnds);
+    // Parse dates as local dates to avoid timezone issues
+    const startDate = new Date(this.state.sprint.sprintStarts + 'T00:00:00');
+    const endDate = new Date(this.state.sprint.sprintEnds + 'T00:00:00');
 
     this.state.calculations.sprintDays = SprintCalculator.calculateSprintDays(startDate, endDate);
     console.log('Calculated sprint days:', this.state.calculations.sprintDays);

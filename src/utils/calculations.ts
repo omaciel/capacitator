@@ -12,7 +12,7 @@ export class SprintCalculator {
     let workingDays = 0;
     const currentDate = new Date(startDate);
 
-    while (currentDate < endDate) {
+    while (currentDate <= endDate) {
       const dayOfWeek = currentDate.getDay();
       if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude Saturdays and Sundays
         workingDays++;
