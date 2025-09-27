@@ -1,78 +1,148 @@
-# Capacitator
+# Capacitator - Sprint Planning Calculator
 
-This project is a simple web application designed to help Agile software engineering teams calculate their team's work capacity for a given sprint. The calculation considers the number of available days for each team member, the overall team velocity (measured in Story Points), and a reserved capacity percentage, which accounts for time reserved for non-sprint activities (such as meetings, research, or other commitments).
-
-The name **Capacitator** is a fun nod to capacity and “Back to the Future’s” flux capacitor.
-
-## Purpose
-
-The **Sprint Capacity Calculator** enables Agile teams to estimate their available capacity for a sprint by:
-
-- Defining the available working days for each team member.
-- Calculating the total number of days in the sprint, excluding weekends.
-- Applying a reserved capacity percentage to account for non-sprint activities.
-- Calculating the target story points based on the remaining capacity.
-
-This tool helps Scrum Masters, Product Owners, and team leads plan their sprint work more effectively by getting an accurate estimate of the team's ability to complete work within a sprint.
+A desktop application built with Go and Fyne that helps Agile teams calculate their sprint capacity based on team members' availability, velocity, and reserved capacity.
 
 ## Features
 
-- **Sprint Details Input**: Define the sprint name, start date, and end date.
-- **Team Member Input**: Add each team member's name and available working days for the sprint.
-- **Team Velocity**: Input the team's velocity (in story points) based on previous sprints.
-- **Reserved Capacity**: Set a reserved capacity percentage to account for activities outside of the sprint.
-- **Automatic Calculations**: The tool automatically calculates:
-  - The total number of working days in the sprint (excluding weekends).
-  - The total team capacity based on the available days for all team members.
-  - The target story points for the sprint, adjusted based on the reserved capacity.
-  
+### Sprint Details
+- **Team Velocity**: Enter your team's average velocity in story points from previous sprints
+- **Sprint Dates**: Set sprint start and end dates (automatically calculates working days excluding weekends)
+- **Reserved Capacity**: Set percentage of time reserved for non-sprint activities (meetings, support, etc.)
+
+### Team Details (Auto-calculated)
+- **Team Size**: Total number of team members
+- **Total Team Days**: Sum of all team members' available days
+- **Sprint Capacity**: Percentage of full capacity based on available days
+- **Sprint Target**: Target story points for the sprint based on velocity and capacity
+
+### Team Management
+- **Add Team Members**: Add team members with their available days and PTO information
+- **Edit Members**: Click on team member details to edit name, available days, or PTO dates
+- **Delete Members**: Remove team members from the calculation
+- **Story Point Distribution**: Automatically calculates each member's story point capacity proportional to their availability
+
+### Template Management
+- **Save Templates**: Export your team configuration as JSON for reuse
+- **Load Templates**: Import previously saved team configurations
+
 ## How It Works
 
-1. **Set Sprint Dates**: The user sets the sprint's start and end dates, and the tool automatically calculates the number of working days, excluding weekends.
-2. **Input Team Members**: Each team member’s available days for the sprint are added, allowing the tool to calculate total available team days.
-3. **Input Team Velocity**: The team’s velocity from previous sprints (measured in story points) is entered.
-4. **Set Reserved Capacity**: A percentage of reserved capacity is set to account for time not dedicated to sprint activities (such as meetings or administrative tasks).
-5. **View Calculated Story Points**: Based on the available team days and reserved capacity, the tool will calculate the adjusted target story points for the sprint.
+1. **Sprint Duration**: Calculates working days between start and end dates (excludes weekends)
+2. **Team Capacity**: Calculates team capacity as percentage of total possible days
+3. **Target Calculation**: Applies reserved capacity reduction to determine realistic story point target
+4. **Individual Distribution**: Distributes story points to each team member proportional to their availability
 
-## Example
+### Calculation Formula
 
-1. The sprint starts on **2024-10-03** and ends on **2024-10-17**.
-2. The team consists of 5 members, each with varying availability due to time off or part-time work.
-3. The team’s velocity from the last sprint is **88 Story Points**.
-4. The reserved capacity is set to **10%** to account for meetings and other non-sprint activities.
+```
+Sprint Target = Team Velocity × (Team Capacity × (1 - Reserved Capacity))
+```
 
-The tool will automatically calculate the following:
+Where:
+- **Team Capacity** = (Total Team Available Days) / (Team Size × Sprint Days)
+- **Reserved Capacity** = Percentage (e.g., 10% = 0.10)
 
-- Total working days (excluding weekends).
-- Total team capacity in terms of days.
-- Adjusted target story points for the sprint, based on the reserved capacity.
+## Installation
 
-## Installation and Setup
+### Prerequisites
+- Go 1.24.5 or later
+- Git
 
-You can use it online by visiting [Capacitator Online](https://capacitator.online).
+### Build from Source
 
-This web application is also a static HTML project that can be run in any modern browser. To use it locally:
+```bash
+git clone https://github.com/omaciel/capacitator.git
+cd capacitator
+go mod tidy
+go build -o capacitator main.go
+./capacitator
+```
 
-1. Clone the repository:
+### Quick Run (without building)
 
-   ```bash
-   git clone https://github.com/your-username/sprint-capacity-calculator.git
-    ```
+```bash
+# Run directly with Go
+go run main.go
+```
 
-2. Open the index.html file in any web browser.
+### Using Makefile
 
-No additional setup or dependencies are required.
+```bash
+# Build and run
+make run
+
+# Just build
+make build
+
+# Clean build artifacts
+make clean
+
+# Install dependencies
+make deps
+```
+
+### Dependencies
+- [Fyne v2](https://fyne.io/) - Cross-platform GUI toolkit for Go
+
+## Usage
+
+1. **Set Sprint Details**:
+   - Enter your team's historical velocity
+   - Set sprint start and end dates
+   - Adjust reserved capacity percentage (default: 10%)
+
+2. **Add Team Members**:
+   - Click "Add Member" to add team members
+   - Enter their name and available days for the sprint
+   - Optionally add PTO dates for reference
+
+3. **Review Calculations**:
+   - Check the calculated sprint target
+   - Review individual story point distributions
+   - Adjust team member availability as needed
+
+4. **Save/Load Templates**:
+   - Save your team configuration for future sprints
+   - Load previously saved configurations
+
+## Features Matching Original Web Version
+
+This Fyne application replicates all functionality from the original web-based calculator:
+
+- ✅ Sprint details form with validation
+- ✅ Real-time calculations
+- ✅ Team member management
+- ✅ Story point capacity distribution
+- ✅ Weekend exclusion in date calculations
+- ✅ Template save/load functionality
+- ✅ Input validation and error handling
+- ✅ Responsive layout
+
+## File Structure
+
+```
+capacitator/
+├── main.go          # Main application code
+├── go.mod           # Go module definition
+├── README.md        # This file
+├── index.html       # Original web version (reference)
+└── capacitator      # Compiled executable (after build)
+```
 
 ## Contributing
 
-If you’d like to contribute to this project, feel free to fork the repository and submit a pull request. Any bug reports, feature requests, or other suggestions are welcome.
-
-1. Fork the project
-2. Create your feature branch (git checkout -b feature/yourFeature)
-3. Commit your changes (git commit -m 'Add new feature')
-4. Push to the branch (git push origin feature/yourFeature)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/omaciel/capacitator/refs/heads/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Original web-based calculator concept
+- [Fyne](https://fyne.io/) for the excellent Go GUI framework
+- The Agile and Scrum community for sprint planning methodologies
