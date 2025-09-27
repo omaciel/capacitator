@@ -78,9 +78,26 @@ run: build ## Build and run the desktop application
 	@echo "$(BLUE)Starting Capacitator...$(NC)"
 	@npm start
 
-# Run tests
-test: ## Run application tests
-	@echo "$(BLUE)Running tests...$(NC)"
+# Run unit tests
+test: ## Run Jest unit tests
+	@echo "$(BLUE)Running unit tests...$(NC)"
+	@npm test
+	@echo "$(GREEN)✓ Unit tests complete$(NC)"
+
+# Run unit tests with coverage
+test-coverage: ## Run Jest unit tests with coverage report
+	@echo "$(BLUE)Running unit tests with coverage...$(NC)"
+	@npm run test:coverage
+	@echo "$(GREEN)✓ Coverage report generated$(NC)"
+
+# Run unit tests in watch mode
+test-watch: ## Run Jest unit tests in watch mode
+	@echo "$(BLUE)Running unit tests in watch mode...$(NC)"
+	@npm run test:watch
+
+# Run browser-based integration tests
+test-browser: ## Run browser-based integration tests
+	@echo "$(BLUE)Running browser integration tests...$(NC)"
 	@if [ -f test.html ]; then \
 		echo "$(YELLOW)Opening test page in browser...$(NC)"; \
 		if command -v open >/dev/null 2>&1; then \
@@ -94,7 +111,11 @@ test: ## Run application tests
 		echo "$(YELLOW)No test file found, building application...$(NC)"; \
 		$(MAKE) build; \
 	fi
-	@echo "$(GREEN)✓ Test setup complete$(NC)"
+	@echo "$(GREEN)✓ Browser test setup complete$(NC)"
+
+# Run all tests (unit + browser)
+test-all: test test-browser ## Run all tests (unit + browser integration)
+	@echo "$(GREEN)✓ All tests complete$(NC)"
 
 # Lint TypeScript code
 lint: ## Run TypeScript linter
