@@ -1,78 +1,244 @@
-# Capacitator
+# Capacitator - Sprint Planning Calculator
 
-This project is a simple web application designed to help Agile software engineering teams calculate their team's work capacity for a given sprint. The calculation considers the number of available days for each team member, the overall team velocity (measured in Story Points), and a reserved capacity percentage, which accounts for time reserved for non-sprint activities (such as meetings, research, or other commitments).
+A comprehensive sprint planning tool available as both a web application and cross-platform desktop application. Helps Agile teams calculate their sprint capacity based on team members' availability, velocity, and reserved capacity.
 
-The name **Capacitator** is a fun nod to capacity and “Back to the Future’s” flux capacitor.
+The name **Capacitator** is a fun nod to capacity and "Back to the Future's" flux capacitor.
 
-## Purpose
+## 🚀 Available Versions
 
-The **Sprint Capacity Calculator** enables Agile teams to estimate their available capacity for a sprint by:
+### 🌐 Web Application (HTML Branch)
+Simple, browser-based version that runs anywhere without installation.
 
-- Defining the available working days for each team member.
-- Calculating the total number of days in the sprint, excluding weekends.
-- Applying a reserved capacity percentage to account for non-sprint activities.
-- Calculating the target story points based on the remaining capacity.
-
-This tool helps Scrum Masters, Product Owners, and team leads plan their sprint work more effectively by getting an accurate estimate of the team's ability to complete work within a sprint.
+### 🖥️ Desktop Application (TypeScript Branch)
+Full-featured Electron desktop app with native file operations and enhanced UI.
 
 ## Features
 
-- **Sprint Details Input**: Define the sprint name, start date, and end date.
-- **Team Member Input**: Add each team member's name and available working days for the sprint.
-- **Team Velocity**: Input the team's velocity (in story points) based on previous sprints.
-- **Reserved Capacity**: Set a reserved capacity percentage to account for activities outside of the sprint.
-- **Automatic Calculations**: The tool automatically calculates:
-  - The total number of working days in the sprint (excluding weekends).
-  - The total team capacity based on the available days for all team members.
-  - The target story points for the sprint, adjusted based on the reserved capacity.
-  
+### Sprint Planning
+- **Team Velocity**: Enter your team's average velocity in story points from previous sprints
+- **Sprint Dates**: Set sprint start and end dates (automatically calculates working days excluding weekends)
+- **Reserved Capacity**: Set percentage of time reserved for non-sprint activities (meetings, support, etc.)
+- **Real-time Calculations**: All values update automatically as you make changes
+
+### Team Management
+- **Add/Edit/Delete Team Members**: Manage team members with their available days and PTO information
+- **Story Point Distribution**: Automatically calculates each member's story point capacity proportional to their availability
+- **Low Availability Highlighting**: Visual indicators for team members with less than 5 available days
+- **Individual Capacity**: Distributes total story points fairly based on each member's availability
+
+### Template Management
+- **Save Templates**: Export your team configuration for reuse across sprints
+- **Load Templates**: Import previously saved team configurations
+- **JSON Format**: Human-readable template files for easy sharing
+
+### Desktop-Only Features
+- **Native File Dialogs**: System-native save/load dialogs
+- **Menu Bar Integration**: File operations accessible via application menu
+- **Keyboard Shortcuts**: Ctrl/Cmd+S to save, Ctrl/Cmd+O to load, Ctrl/Cmd+N for new template
+- **Offline Operation**: No internet connection required
+- **Cross-platform**: Works on Windows, macOS, and Linux
+
 ## How It Works
 
-1. **Set Sprint Dates**: The user sets the sprint's start and end dates, and the tool automatically calculates the number of working days, excluding weekends.
-2. **Input Team Members**: Each team member’s available days for the sprint are added, allowing the tool to calculate total available team days.
-3. **Input Team Velocity**: The team’s velocity from previous sprints (measured in story points) is entered.
-4. **Set Reserved Capacity**: A percentage of reserved capacity is set to account for time not dedicated to sprint activities (such as meetings or administrative tasks).
-5. **View Calculated Story Points**: Based on the available team days and reserved capacity, the tool will calculate the adjusted target story points for the sprint.
+### Sprint Capacity Calculation
 
-## Example
+1. **Sprint Duration**: Calculates working days between start and end dates (excludes weekends)
+2. **Team Capacity**: Calculates team capacity as percentage of total possible days
+3. **Target Calculation**: Applies reserved capacity reduction to determine realistic story point target
+4. **Individual Distribution**: Distributes story points to each team member proportional to their availability
 
-1. The sprint starts on **2024-10-03** and ends on **2024-10-17**.
-2. The team consists of 5 members, each with varying availability due to time off or part-time work.
-3. The team’s velocity from the last sprint is **88 Story Points**.
-4. The reserved capacity is set to **10%** to account for meetings and other non-sprint activities.
+### Calculation Formula
 
-The tool will automatically calculate the following:
+```
+Sprint Target = Team Velocity × (Team Capacity × (1 - Reserved Capacity))
+```
 
-- Total working days (excluding weekends).
-- Total team capacity in terms of days.
-- Adjusted target story points for the sprint, based on the reserved capacity.
+Where:
+- **Team Capacity** = (Total Team Available Days) / (Team Size × Sprint Days)
+- **Reserved Capacity** = Percentage (e.g., 10% = 0.10)
 
-## Installation and Setup
+## 🛠️ Quick Start
 
-You can use it online by visiting [Capacitator Online](https://capacitator.online).
+### Prerequisites
+- Node.js 18+ (for desktop version)
+- Git
+- Modern web browser (for web version)
 
-This web application is also a static HTML project that can be run in any modern browser. To use it locally:
+### Setup & Installation
 
-1. Clone the repository:
+```bash
+# Clone the repository
+git clone https://github.com/omaciel/capacitator.git
+cd capacitator
 
-   ```bash
-   git clone https://github.com/your-username/sprint-capacity-calculator.git
-    ```
+# Quick setup with Makefile
+make setup
 
-2. Open the index.html file in any web browser.
+# Or manual setup
+npm install
+```
 
-No additional setup or dependencies are required.
+### Running the Application
 
-## Contributing
+```bash
+# Desktop Application
+make run
 
-If you’d like to contribute to this project, feel free to fork the repository and submit a pull request. Any bug reports, feature requests, or other suggestions are welcome.
+# Development mode with hot reload
+make dev
 
-1. Fork the project
-2. Create your feature branch (git checkout -b feature/yourFeature)
-3. Commit your changes (git commit -m 'Add new feature')
-4. Push to the branch (git push origin feature/yourFeature)
-5. Open a Pull Request
+# Build for distribution
+make build
+```
 
-## License
+### Web Version
 
-This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/omaciel/capacitator/refs/heads/main/LICENSE) file for details.
+```bash
+# Switch to HTML branch for web version
+git checkout html
+
+# Open index.html in your browser
+open index.html
+```
+
+## 📁 Project Structure
+
+```
+capacitator/
+├── Makefile                 # Build automation and common tasks
+├── package.json             # Node.js dependencies and scripts
+├── src/                     # TypeScript source code
+│   ├── main.ts              # Electron main process
+│   ├── preload.ts           # Secure IPC bridge
+│   ├── types/
+│   │   └── index.ts         # TypeScript type definitions
+│   ├── utils/
+│   │   ├── calculations.ts  # Sprint calculation logic
+│   │   └── fileOperations.ts # File operations
+│   └── renderer/
+│       ├── index.html       # Application UI
+│       ├── styles.css       # Modern CSS styling
+│       ├── renderer.ts      # TypeScript renderer
+│       └── renderer-browser.js # Browser-compatible JavaScript
+├── dist/                    # Compiled application (generated)
+├── release/                 # Distribution packages (generated)
+└── index.html              # Web version (html branch)
+```
+
+## 💻 Technology Stack
+
+### Desktop Application
+- **Electron**: Cross-platform desktop framework
+- **TypeScript**: Type-safe JavaScript development
+- **Modern CSS**: Pure CSS with modern features (no external frameworks)
+- **Minimal Dependencies**: Essential packages only for security and performance
+
+### Web Application
+- **Pure HTML/CSS/JavaScript**: No frameworks or dependencies
+- **Bootstrap**: UI components and responsive design
+- **Local Storage**: Browser-based data persistence
+
+## 📋 Makefile Commands
+
+```bash
+make help           # Show available commands
+make setup          # Initial project setup
+make install        # Install dependencies
+make build          # Build the application
+make run            # Build and run desktop app
+make dev            # Development mode with hot reload
+make test           # Run tests
+make clean          # Clean build artifacts
+make dist           # Create distribution packages
+make pack           # Create portable packages
+```
+
+## 🔧 Available Scripts
+
+### Desktop Application
+
+```bash
+# Development
+npm run build       # Build TypeScript
+npm run watch       # Watch mode for development
+npm start          # Build and start application
+npm run dev        # Development with auto-reload
+
+# Distribution
+npm run pack       # Package without installer
+npm run dist       # Create installer packages
+npm run clean      # Clean build artifacts
+```
+
+## 🏗️ Build Outputs
+
+- **Development**: `npm run dev` - Hot reload for development
+- **Production**: `npm run dist` - Creates installer packages
+- **Portable**: `npm run pack` - Creates portable app without installer
+
+## ⌨️ Keyboard Shortcuts (Desktop)
+
+- `Ctrl/Cmd + N`: New template
+- `Ctrl/Cmd + S`: Save template
+- `Ctrl/Cmd + O`: Load template
+- `Ctrl/Cmd + Q`: Quit application (macOS)
+- `F12`: Toggle Developer Tools
+
+## 🖥️ Platform Support
+
+- **Windows**: NSIS installer (.exe)
+- **macOS**: DMG installer (.dmg)
+- **Linux**: AppImage (.AppImage)
+- **Web**: Any modern browser
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+make test
+
+# Test specific functionality
+npm run build && open test.html
+```
+
+## 📚 Documentation
+
+- **TESTING.md**: Comprehensive testing guide and troubleshooting
+- **Web Version**: Available in `html` branch
+- **Desktop Version**: Available in `typescript` branch
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Test across platforms (use `make test`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### Development Guidelines
+
+- **Web Version**: Keep it simple, no dependencies
+- **Desktop Version**: Maintain type safety with TypeScript
+- **Cross-platform**: Test on multiple operating systems
+- **Security**: Follow Electron security best practices
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Original web-based calculator concept
+- [Electron](https://electronjs.org/) for cross-platform desktop development
+- [TypeScript](https://typescriptlang.org/) for type-safe development
+- The Agile and Scrum community for sprint planning methodologies
+
+## 📊 Example Usage
+
+1. **Set Sprint Details**: Define team velocity (e.g., 88 story points) and sprint dates
+2. **Add Team Members**: Include each member's availability (e.g., 10 days for full-time, 8 days with PTO)
+3. **Set Reserved Capacity**: Account for meetings and non-sprint work (typically 10-20%)
+4. **Review Results**: See calculated story point distribution per team member
+5. **Save Template**: Store configuration for future sprints
