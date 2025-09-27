@@ -15,83 +15,86 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Sprint Details Section -->
-            <section class="section">
-                <h2>Sprint Details</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="teamVelocity" class="form-label" title="Team's average velocity in story points from previous sprints">
-                            Team Velocity:
-                        </label>
-                        <input type="number" id="teamVelocity" class="form-input" value="88" placeholder="Enter team velocity">
-                    </div>
+            <!-- Top Section - Sprint and Team Details Side by Side -->
+            <div class="top-sections">
+                <!-- Sprint Details Section -->
+                <section class="section section-half">
+                    <h2>Sprint Details</h2>
+                    <div class="form-grid-compact">
+                        <div class="form-group">
+                            <label for="teamVelocity" class="form-label" title="Team's average velocity in story points from previous sprints">
+                                Team Velocity:
+                            </label>
+                            <input type="number" id="teamVelocity" class="form-input" value="88" placeholder="Enter team velocity">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="sprintStarts" class="form-label" title="Start date of the sprint">
-                            Sprint Starts:
-                        </label>
-                        <input type="date" id="sprintStarts" class="form-input">
-                    </div>
+                        <div class="form-group">
+                            <label for="sprintStarts" class="form-label" title="Start date of the sprint">
+                                Sprint Starts:
+                            </label>
+                            <input type="date" id="sprintStarts" class="form-input">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="sprintEnds" class="form-label" title="End date of the sprint">
-                            Sprint Ends:
-                        </label>
-                        <input type="date" id="sprintEnds" class="form-input">
-                    </div>
+                        <div class="form-group">
+                            <label for="sprintEnds" class="form-label" title="End date of the sprint">
+                                Sprint Ends:
+                            </label>
+                            <input type="date" id="sprintEnds" class="form-input">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="sprintDays" class="form-label" title="Number of sprint days excluding weekends">
-                            Total Days:
-                        </label>
-                        <span id="sprintDays" class="form-display">0</span>
-                    </div>
+                        <div class="form-group">
+                            <label for="sprintDays" class="form-label" title="Number of sprint days excluding weekends">
+                                Total Days:
+                            </label>
+                            <span id="sprintDays" class="form-display">0</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="reservedCapacity" class="form-label" title="Percentage of time reserved for non-sprint activities">
-                            Reserved Capacity (%):
-                        </label>
-                        <input type="number" id="reservedCapacity" class="form-input" value="10">
+                        <div class="form-group">
+                            <label for="reservedCapacity" class="form-label" title="Percentage of time reserved for non-sprint activities">
+                                Reserved Capacity (%):
+                            </label>
+                            <input type="number" id="reservedCapacity" class="form-input" value="10">
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Team Details Section -->
-            <section class="section">
-                <h2>Team Details</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="teamSize" class="form-label" title="Total number of team members">
-                            Team Size:
-                        </label>
-                        <span id="teamSize" class="form-display">0</span>
-                    </div>
+                <!-- Team Details Section -->
+                <section class="section section-half">
+                    <h2>Team Details</h2>
+                    <div class="form-grid-compact">
+                        <div class="form-group">
+                            <label for="teamSize" class="form-label" title="Total number of team members">
+                                Team Size:
+                            </label>
+                            <span id="teamSize" class="form-display">0</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="totalTeamDays" class="form-label" title="Total available team days during the sprint">
-                            Total Team Days:
-                        </label>
-                        <span id="totalTeamDays" class="form-display">0</span>
-                    </div>
+                        <div class="form-group">
+                            <label for="totalTeamDays" class="form-label" title="Total available team days during the sprint">
+                                Total Team Days:
+                            </label>
+                            <span id="totalTeamDays" class="form-display">0</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="totalTeamCapacity" class="form-label" title="Team capacity based on available days">
-                            Sprint Capacity (%):
-                        </label>
-                        <span id="totalTeamCapacity" class="form-display">0</span>
-                    </div>
+                        <div class="form-group">
+                            <label for="totalTeamCapacity" class="form-label" title="Team capacity based on available days">
+                                Sprint Capacity (%):
+                            </label>
+                            <span id="totalTeamCapacity" class="form-display">0</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="targetStoryPoints" class="form-label" title="Sprint target story points based on reserved capacity">
-                            Sprint Target:
-                        </label>
-                        <span id="targetStoryPoints" class="form-display">0</span>
+                        <div class="form-group">
+                            <label for="targetStoryPoints" class="form-label" title="Sprint target story points based on reserved capacity">
+                                Sprint Target:
+                            </label>
+                            <span id="targetStoryPoints" class="form-display">0</span>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             <!-- Team Members Section -->
-            <section class="section">
+            <section class="section section-full-width">
                 <div class="section-header">
                     <h2>Team Members</h2>
                     <div class="button-group">

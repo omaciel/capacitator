@@ -38,6 +38,12 @@ Full-featured Electron desktop app with native file operations and enhanced UI.
 - **Offline Operation**: No internet connection required
 - **Cross-platform**: Works on Windows, macOS, and Linux
 
+## 📸 Application Preview
+
+![Capacitator Sprint Planning Calculator](screenshot.png)
+
+*The Capacitator interface showing the side-by-side Sprint Details and Team Details sections at the top, with the Team Members management area below. The application automatically calculates story point distribution based on team member availability and sprint parameters.*
+
 ## How It Works
 
 ### Sprint Capacity Calculation
@@ -107,6 +113,7 @@ open index.html
 capacitator/
 ├── Makefile                 # Build automation and common tasks
 ├── package.json             # Node.js dependencies and scripts
+├── screenshot.png           # Application interface preview
 ├── src/                     # TypeScript source code
 │   ├── main.ts              # Electron main process
 │   ├── preload.ts           # Secure IPC bridge
