@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Capacitator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        button { padding: 10px; margin: 5px; }
+        input { padding: 5px; margin: 5px; }
+        .result { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Capacitator JavaScript Test</h1>
+
+    <div class="test-section">
+        <h2>Date Input Test</h2>
+        <label>Sprint Start: <input type="date" id="testSprintStart"></label><br>
+        <label>Sprint End: <input type="date" id="testSprintEnd"></label><br>
+        <div class="result">Total Days: <span id="testDays">0</span></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Button Test</h2>
+        <button onclick="testAddMember()">Test Add Member</button>
+        <button onclick="testSaveTemplate()">Test Save Template</button>
+        <div class="result">Button Test Result: <span id="buttonResult">None clicked yet</span></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Team Members Table</h2>
+        <button onclick="addTestMember()">Add Test Member</button>
+        <table border="1" style="width: 100%; margin-top: 10px;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Available Days</th>
+                    <th>Story Points</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="testTeamTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Mock window.electronAPI for testing
+        window.electronAPI = {
+            saveTemplate: (template) => {
+                console.log('Mock save template:', template);
+                return Promise.resolve({ success: true });
+            },
+            loadTemplate: () => {
+                console.log('Mock load template');
+                return Promise.resolve({ success: false, error: 'Mock implementation' });
+            },
+            onMenuAction: (callback) => {
+                console.log('Mock menu action listener setup');
+            }
+        };
+    </script>
+    <script src="dist/renderer/renderer-browser.js"></script>
+
+    <script>
+        // Test functions
+        function testAddMember() {
+            console.log('Test add member clicked');
+            document.getElementById('buttonResult').textContent = 'Add Member clicked at ' + new Date().toLocaleTimeString();
+
+            // Try to call the renderer's add member function
+            if (window.renderer && window.renderer.addTeamMember) {
+                try {
+                    window.renderer.addTeamMember();
+                    document.getElementById('buttonResult').textContent += ' - Function called successfully!';
+                } catch (error) {
+                    document.getElementById('buttonResult').textContent += ' - Error: ' + error.message;
+                }
+            }
+        }
+
+        function testSaveTemplate() {
+            console.log('Test save template clicked');
+            document.getElementById('buttonResult').textContent = 'Save Template clicked at ' + new Date().toLocaleTimeString();
+
+            // Try to call the renderer's save template function
+            if (window.renderer && window.renderer.saveTemplate) {
+                try {
+                    window.renderer.saveTemplate();
+                    document.getElementById('buttonResult').textContent += ' - Function called successfully!';
+                } catch (error) {
+                    document.getElementById('buttonResult').textContent += ' - Error: ' + error.message;
+                }
+            }
+        }
+
+        function addTestMember() {
+            const tbody = document.getElementById('testTeamTableBody');
+            const row = document.createElement('tr');
+            const memberCount = tbody.children.length;
+
+            row.innerHTML = `
+                <td><input type="text" value="Test Member ${memberCount + 1}"></td>
+                <td><input type="number" value="10"></td>
+                <td>8</td>
+                <td><button onclick="this.parentElement.parentElement.remove()">Remove</button></td>
+            `;
+
+            tbody.appendChild(row);
+        }
+
+        // Test date change detection
+        document.addEventListener('DOMContentLoaded', function() {
+            const startInput = document.getElementById('testSprintStart');
+            const endInput = document.getElementById('testSprintEnd');
+            const daysSpan = document.getElementById('testDays');
+
+            function updateDays() {
+                const start = new Date(startInput.value);
+                const end = new Date(endInput.value);
+
+                if (start && end && end > start) {
+                    let workingDays = 0;
+                    const current = new Date(start);
+
+                    while (current < end) {
+                        const dayOfWeek = current.getDay();
+                        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                            workingDays++;
+                        }
+                        current.setDate(current.getDate() + 1);
+                    }
+
+                    daysSpan.textContent = workingDays;
+                } else {
+                    daysSpan.textContent = '0';
+                }
+            }
+
+            startInput.addEventListener('change', updateDays);
+            endInput.addEventListener('change', updateDays);
+
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            const twoWeeks = new Date();
+            twoWeeks.setDate(twoWeeks.getDate() + 14);
+            const twoWeeksStr = twoWeeks.toISOString().split('T')[0];
+
+            startInput.value = today;
+            endInput.value = twoWeeksStr;
+            updateDays();
+
+            console.log('Test page setup complete');
+            console.log('Window.renderer available:', !!window.renderer);
+        });
+    </script>
+</body>
+</html>
