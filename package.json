@@ -7,7 +7,7 @@
     "build": "tsc && node build-script.js",
     "watch": "tsc -w",
     "start": "npm run build && electron .",
-    "dev": "concurrently \"npm run watch\" \"wait-on dist/main.js && electron .\"",
+    "dev": "npm run build && concurrently \"npm run watch\" \"wait-on dist/main.js && electron .\"",
     "pack": "electron-builder",
     "dist": "npm run build && electron-builder",
     "clean": "rimraf dist",
@@ -49,13 +49,16 @@
       "assets/**/*"
     ],
     "mac": {
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon.ico"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "assets/icon.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "assets/icon.ico"
     }
   },
   "jest": {

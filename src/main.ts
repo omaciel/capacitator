@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, nativeImage } from 'electron';
 import * as path from 'path';
 import { FileOperations } from './utils/fileOperations';
 
@@ -10,8 +10,12 @@ class CapacitatorApp {
   }
 
   private initializeApp(): void {
+    // Set app name for dock tooltip
+    app.setName('Capacitator');
+
     // Handle app ready event
     app.whenReady().then(() => {
+      this.setDockIcon();
       this.createMainWindow();
       this.setupMenu();
       this.setupIpcHandlers();
@@ -32,12 +36,42 @@ class CapacitatorApp {
     });
   }
 
+  private setDockIcon(): void {
+    // Set dock icon for macOS
+    if (process.platform === 'darwin' && app.dock) {
+      const iconPaths = [
+        path.join(__dirname, '..', 'favicon.ico'),
+        path.join(__dirname, 'assets', 'icon.ico')
+      ];
+
+      for (const iconPath of iconPaths) {
+        if (!require('fs').existsSync(iconPath)) {
+          continue;
+        }
+
+        try {
+          const icon = nativeImage.createFromPath(iconPath);
+          if (!icon.isEmpty()) {
+            const resized = icon.resize({ width: 512, height: 512 });
+            app.dock.setIcon(resized);
+            return;
+          }
+        } catch (error) {
+          continue;
+        }
+      }
+    }
+  }
+
   private createMainWindow(): void {
+    const iconPath = path.join(__dirname, 'assets', 'icon.ico');
+
     this.mainWindow = new BrowserWindow({
       width: 1200,
       height: 800,
       minWidth: 800,
       minHeight: 600,
+      icon: iconPath,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,

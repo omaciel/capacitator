@@ -1,6 +1,26 @@
 const fs = require('fs');
 const path = require('path');
 
+// Copy directory recursively
+function copyDirectorySync(source, destination) {
+    if (!fs.existsSync(destination)) {
+        fs.mkdirSync(destination, { recursive: true });
+    }
+
+    const entries = fs.readdirSync(source, { withFileTypes: true });
+
+    for (const entry of entries) {
+        const sourcePath = path.join(source, entry.name);
+        const destPath = path.join(destination, entry.name);
+
+        if (entry.isDirectory()) {
+            copyDirectorySync(sourcePath, destPath);
+        } else {
+            fs.copyFileSync(sourcePath, destPath);
+        }
+    }
+}
+
 // Copy assets after TypeScript compilation
 function copyAssets() {
     const sourceHtml = path.join(__dirname, 'src', 'renderer', 'index.html');
@@ -21,7 +41,15 @@ function copyAssets() {
     fs.copyFileSync(sourceCss, destCss);
     fs.copyFileSync(sourceJs, destJs);
 
-    console.log('Assets copied successfully!');
+    // Copy assets directory
+    const assetsSource = path.join(__dirname, 'assets');
+    const assetsDest = path.join(__dirname, 'dist', 'assets');
+    if (fs.existsSync(assetsSource)) {
+        copyDirectorySync(assetsSource, assetsDest);
+        console.log('Assets directory copied successfully!');
+    }
+
+    console.log('All assets copied successfully!');
 }
 
 copyAssets();
